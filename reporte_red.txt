@@ -87,3 +87,5 @@ Estado de voz lanzado: Auditoría terminada. Tu internet está lento, registra 5
 [2026-06-06 15:53:18] Ping: 2135.9 ms | Speed: 2.56 Mbps | Sensor: 5.0
 [2026-06-06 15:53:34] Ping: 1580.0 ms | Speed: 3.25 Mbps | Sensor: 5.0
 [2026-06-06 15:53:50] Ping: 2058.2 ms | Speed: 3.3 Mbps | Sensor: 5.0
+[2026-06-06 17:55:06] Ping: 7960.7 ms | Speed: 0.76 Mbps | Sensor: 5.0
+[2026-06-06 17:55:27] Ping: 3983.4 ms | Speed: 1.63 Mbps | Sensor: 5.0

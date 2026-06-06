@@ -1,3 +1,2 @@
-=== AUDITORÍA SOCKETS PRIVADOS 2026-06-06 14:16:02 ===
-Total Equipos: 1
-IP: 192.168.43.1 | Identificación: Router Principal
+=== REPORTE DE DISPOSITIVOS EN VIVO ===
+IP: 192.168.43.1 | Router Principal

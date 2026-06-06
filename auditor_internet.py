@@ -1,19 +1,44 @@
 import os
-import subprocess
+import sys
 import time
 import urllib.request
+import json
+import subprocess
 from datetime import datetime
 
 def borrar_pantalla():
     os.system('clear')
+
+def generar_barra(mbps, max_esperado=20):
+    # Genera una barra gráfica visual basada en los Mbps
+    ancho_barra = 20
+    porcentaje = min(int((mbps / max_esperado) * ancho_barra), ancho_barra)
+    bloques = "█" * porcentaje
+    espacios = "░" * (ancho_barra - porcentaje)
+    return f"[{bloques}{espacios}]"
+
+def leer_sensor_proximidad():
+    try:
+        # Consultamos el sensor limitando a 1 sola lectura rápida
+        proceso = subprocess.run(['termux-sensor', '-s', 'Proximity', '-n', '1'], 
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=2)
+        if proceso.returncode == 0:
+            datos = json.loads(proceso.stdout)
+            # Buscamos dinámicamente cualquier sensor que contenga la palabra Proximity
+            for nombre_sensor in datos.keys():
+                if "Proximity" in nombre_sensor or "ps" in nombre_sensor:
+                    valores = datos[nombre_sensor]['values']
+                    return float(valores[0])
+    except Exception:
+        pass
+    return 5.0  # Por defecto asumimos que está lejos (Lejos)
 
 def medir_ping():
     try:
         inicio = time.time()
         urllib.request.urlopen("https://google.com", timeout=4)
         fin = time.time()
-        latencia = (fin - inicio) * 1000
-        return round(latencia, 1)
+        return round((fin - inicio) * 1000, 1)
     except Exception:
         return None
 
@@ -21,56 +46,62 @@ def medir_velocidad():
     try:
         url = "https://hetzner.de" 
         inicio = time.time()
-        # Descargamos un bloque pequeño (1MB) para no saturar tu red en cada bucle
-        req = urllib.request.Request(url, headers={'Range': 'bytes=0-1048576'})
+        req = urllib.request.Request(url, headers={'Range': 'bytes=0-1048576'}) # 1MB
         with urllib.request.urlopen(req, timeout=5) as respuesta:
             respuesta.read()
         fin = time.time()
-        tiempo_total = fin - inicio
-        megabits = (1048576 * 8) / 1000000
-        mbps = megabits / tiempo_total
+        mbps = (1048576 * 8) / 1000000 / (fin - inicio)
         return round(mbps, 2)
     except Exception:
         return 0.0
 
-# === INICIO DEL RASTREADOR INFINITO ===
+# === BUCLE PRINCIPAL DEL RADAR ===
 try:
     while True:
         borrar_pantalla()
         print("==========================================")
-        print(" 🛰️   RASTREADOR DE RED EN VIVO (ACTIVO)   🛰️")
+        print(" 🛰️   RADAR ECO-SENSORIAL DE RED ACTIVO   🛰️")
         print("==========================================")
-        print(" [ Escaneando latencia actual... ]")
-        ping_promedio = medir_ping()
-
-        print(" [ Analizando tasa de transferencia... ]")
-        velocidad_mbps = medir_velocidad()
-
+        
+        # Leemos el hardware antes de la prueba de red
+        proximidad = leer_sensor_proximidad()
+        modo_mano = " 🚫 MANO DETECTADA (Escaneo Forzado) " if proximidad == 0.0 else " 🟢 Monitoreo Normal "
+        print(f" [ Sensor:{modo_mano}]")
+        
+        print(" [ Escaneando latencia... ]")
+        ping = medir_ping()
+        
+        print(" [ Analizando Mbps... ]")
+        mbps = medir_velocidad()
+        
         ahora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+        barra_visual = generar_barra(mbps)
+        
         borrar_pantalla()
         print("==========================================")
-        print(" 📊   RASTREADOR DE INTERNET EN SEGUNDOS  📊")
+        print(" 📊   PANEL GRÁFICO DE INTERNET EN VIVO  📊")
         print("==========================================")
         print(f" 📅  Último escaneo: {ahora}")
-
-        if ping_promedio:
-            print(f" ⚡  Latencia:      {ping_promedio} ms (Ping)")
+        print(f" ⚡  Latencia:      {ping if ping else 'Error'} ms")
+        print(f" 🚀  Descarga:      {mbps} Mbps")
+        print(f" 📈  Rendimiento:   {barra_visual}")
+        print("==========================================")
+        
+        if proximidad == 0.0:
+            print(" 🔥 ¡MODO TURBO ACTIVADO POR HARDWARE! 🔥")
+            print("==========================================")
+            os.system('termux-vibrate -d 100')
+        
+        print(" 🛑 Presiona CTRL + C para salir")
+        print("==========================================")
+        
+        with open("reporte_red.txt", "a") as f:
+            f.write(f"[{ahora}] Ping: {ping} ms | Speed: {mbps} Mbps | Sensor: {proximidad}\n")
+        
+        if proximidad == 0.0:
+            time.sleep(3)
         else:
-            print(" ❌  Latencia:      Error de conexión")
-
-        print(f" 🚀  Descarga:      {velocidad_mbps} Mbps")
-        print("==========================================")
-        print(" 🛑 Presiona CTRL + C para detener el rastreo")
-        print("==========================================")
-
-        # Guardamos en el archivo el historial de este segundo
-        with open("reporte_red.txt", "a") as archivo:  # Usamos 'a' para acumular el historial
-            archivo.write(f"[{ahora}] Ping: {ping_promedio if ping_promedio else 'Fallo'} ms | Speed: {velocidad_mbps} Mbps\n")
-
-        # Tiempo de espera antes de la siguiente actualización (10 segundos)
-        # Puedes cambiar este 10 por el número de segundos que prefieras
-        time.sleep(10)
+            time.sleep(10)
 
 except KeyboardInterrupt:
-    print("\n\n🛑 Rastreador detenido por el usuario. ¡Buen trabajo, campeón!")
+    print("\n\n🛑 Radar sensorial apagado. ¡Impecable trabajo, campeón!")

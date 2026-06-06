@@ -7,3 +7,13 @@ Estado de voz lanzado: Auditoría terminada. Tu internet está lento, registra 5
 [2026-06-06 02:19:28] Ping: 1795.2 ms | Speed: 0.19 Mbps
 [2026-06-06 02:19:51] Ping: 4482.0 ms | Speed: 3.28 Mbps
 [2026-06-06 02:20:06] Ping: 2852.6 ms | Speed: 3.53 Mbps
+[2026-06-06 02:24:51] Ping: 950.9 ms | Speed: 2.7 Mbps
+[2026-06-06 02:25:06] Ping: 2496.4 ms | Speed: 3.55 Mbps
+[2026-06-06 02:36:29] Ping: 935.4 ms | Speed: 3.0 Mbps
+[2026-06-06 02:36:44] Ping: 2352.2 ms | Speed: 3.8 Mbps
+[2026-06-06 02:37:02] Ping: 4193.2 ms | Speed: 2.36 Mbps
+[2026-06-06 02:39:41] Ping: 3481.0 ms | Speed: 0.0 Mbps
+[2026-06-06 02:40:06] Ping: 2706.8 ms | Speed: 0.66 Mbps
+[2026-06-06 02:42:53] Ping: 1097.5 ms | Speed: 2.97 Mbps | Sensor: 5.000024795532227
+[2026-06-06 02:43:09] Ping: 2484.6 ms | Speed: 3.78 Mbps | Sensor: 5.000024795532227
+[2026-06-06 02:44:13] Ping: 2348.5 ms | Speed: 2.86 Mbps | Sensor: 5.000024795532227

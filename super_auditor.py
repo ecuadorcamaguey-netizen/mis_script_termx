@@ -1,6 +1,7 @@
 import os
 import time
 import sqlite3
+import re
 
 # Paleta de colores táctica
 VERDE = "\033[1;32m"
@@ -12,7 +13,6 @@ RESET = "\033[0m"
 DB_PATH = os.path.expanduser("~/mis_script/registro_central.db")
 
 def inicializar_base_datos():
-    """Crea la base de datos local y la tabla de auditoría si no existen."""
     conexion = sqlite3.connect(DB_PATH)
     cursor = conexion.cursor()
     cursor.execute('''
@@ -27,7 +27,6 @@ def inicializar_base_datos():
     conexion.close()
 
 def registrar_evento(tipo, descripcion):
-    """Guarda una alerta de seguridad directamente en la base de datos."""
     conexion = sqlite3.connect(DB_PATH)
     cursor = conexion.cursor()
     fecha_actual = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -39,7 +38,6 @@ def registrar_evento(tipo, descripcion):
     conexion.close()
 
 def ver_historial_db():
-    """Consulta y despliega las alertas guardadas en la base de datos."""
     os.system("clear")
     print(f"{CYAN}======================================================={RESET}")
     print(f"       🗄️  HISTORIAL DE ALERTAS - BASE DE DATOS LOCAL")
@@ -62,23 +60,38 @@ def ver_historial_db():
     print(f"{CYAN}======================================================={RESET}")
     input(f"\nPresiona {AMARILLO}[Enter]{RESET} para regresar al menú central...")
 
-def escanear_objetivo_rapido():
-    """Módulo integrado de escaneo de red agresivo."""
+def escanear_objetivo_nmap():
+    """Módulo Avanzado: Escaneo e interrogación de puertos con registro SQL."""
     os.system("clear")
     print(f"{CYAN}======================================================={RESET}")
-    print(f"       🌐 ESCÁNER TÁCTICO DE HARDWARE DE RED")
+    print(f"       🌐 AUDITORÍA PROFUNDA DE RED (NMAP INTERGADO)")
     print(f"{CYAN}======================================================={RESET}")
     target = "192.168.43.249"
-    print(f"Rastreando conectividad con el dispositivo: {AMARILLO}{target}{RESET}...")
+    print(f"Lanzando Nmap táctico al host objetivo: {AMARILLO}{target}{RESET}...")
+    print(f"{AMARILLO}[!] Analizando los puertos principales, por favor espere...{RESET}\n")
     
-    # Lanzamos un barrido rápido de ping directo
-    respuesta = os.system(f"ping -c 2 -W 1 {target} > /dev/null")
-    if respuesta == 0:
-        print(f"\n{VERDE}✅ OBJETIVO EN VIVO: {target} está respondiendo.{RESET}")
-        registrar_evento("RED_PING", f"Host {target} detectado en línea")
+    # Ejecutamos Nmap y capturamos su salida de texto directamente en Python
+    with os.popen(f"nmap -F {target}") as pipe:
+        salida_nmap = pipe.read()
+    
+    print(f"{CYAN}------------------- SALIDA DE NMAP --------------------{RESET}")
+    print(salida_nmap)
+    print(f"{CYAN}-------------------------------------------------------{RESET}")
+    
+    # Procesamos la salida usando expresiones regulares para buscar puertos "open"
+    puertos_abiertos = re.findall(r"(\d+/tcp\s+open\s+\S+)", salida_nmap)
+    
+    if puertos_abiertos:
+        print(f"\n{ROJO}⚠️  PUERTOS ABIERTOS DETECTADOS EN EL OBJETIVO:{RESET}")
+        for puerto in puertos_abiertos:
+            print(f" {ROJO}• {puerto}{RESET}")
+        
+        # Guardamos la lista en la Base de Datos SQL
+        descripcion_evento = f"Puertos abiertos detectados: {', '.join(puertos_abiertos)}"
+        registrar_evento("NET_VULN", descripcion_evento[:100])
     else:
-        print(f"\n{ROJO}❌ OBJETIVO INACTIVO: {target} no responde al ping.{RESET}")
-        registrar_evento("RED_FALLO", f"Host {target} fuera de línea o protegido")
+        print(f"\n{VERDE}✅ ESCÁNER LIMPIO: No se encontraron puertos abiertos expuestos.{RESET}")
+        registrar_evento("NET_SECURE", f"Host {target} verificado sin puertos expuestos")
         
     print(f"{CYAN}======================================================={RESET}")
     input(f"\nPresiona {AMARILLO}[Enter]{RESET} para regresar al menú central...")
@@ -88,11 +101,11 @@ def menu_operaciones():
     while True:
         os.system("clear")
         print(f"{CYAN}======================================================={RESET}")
-        print(f"      🎛️  CENTRO DE COMANDO V1.0 - PROYECTO LIBERTAD")
+        print(f"      🎛️  CENTRO DE COMANDO V2.0 - PROYECTO LIBERTAD")
         print(f"{CYAN}======================================================={RESET}")
-        print(f" {VERDE}1.{RESET} Lanzar Monitor Guardián de CPU e Hilos")
-        print(f" {VERDE}2.{RESET} Verificar Segundo Android (192.168.43.249)")
-        print(f" {VERDE}3.{RESET} Consultar Base de Datos de Alertas Seguras")
+        print(f" {VERDE}1.{RESET} Lanzar Monitor Guardián de CPU e Hilos V1.1")
+        print(f" {VERDE}2.{RESET} Auditoría Nmap Completa al Android (192.168.43.249)")
+        print(f" {VERDE}3.{RESET} Consultar Base de Datos de Alertas Seguras (SQL)")
         print(f" {VERDE}4.{RESET} Lanzar Trampa de Evidencias (Honeypot)")
         print(f" {ROJO}5. Salir del Centro de Comando y Regresar a Base{RESET}")
         print(f"{CYAN}======================================================={RESET}")
@@ -102,7 +115,7 @@ def menu_operaciones():
         if opcion == "1":
             os.system("python ~/mis_script/guardian.py")
         elif opcion == "2":
-            escanear_objetivo_rapido()
+            escanear_objetivo_nmap()
         elif opcion == "3":
             ver_historial_db()
         elif opcion == "4":

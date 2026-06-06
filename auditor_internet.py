@@ -6,32 +6,47 @@ import json
 import subprocess
 from datetime import datetime
 
+# Paleta de colores ANSI para la consola de Termux
+VERDE = "\033[1;32m"
+AMARILLO = "\033[1;33m"
+ROJO = "\033[1;31m"
+AZUL = "\033[1;34m"
+CYAN = "\033[1;36m"
+BLANCO = "\033[1;37m"
+RESET = "\033[0m"
+
 def borrar_pantalla():
     os.system('clear')
 
-def generar_barra(mbps, max_esperado=20):
-    # Genera una barra gráfica visual basada en los Mbps
+def generar_barra_color(mbps, max_esperado=20):
     ancho_barra = 20
     porcentaje = min(int((mbps / max_esperado) * ancho_barra), ancho_barra)
+    
+    # Asignamos el color de la barra según la velocidad real
+    if mbps < 5.0:
+        color_actual = ROJO
+    elif mbps < 15.0:
+        color_actual = AMARILLO
+    else:
+        color_actual = VERDE
+        
     bloques = "█" * porcentaje
     espacios = "░" * (ancho_barra - porcentaje)
-    return f"[{bloques}{espacios}]"
+    return f"{color_actual}[{bloques}{espacios}]{RESET}"
 
 def leer_sensor_proximidad():
     try:
-        # Consultamos el sensor limitando a 1 sola lectura rápida
         proceso = subprocess.run(['termux-sensor', '-s', 'Proximity', '-n', '1'], 
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=2)
         if proceso.returncode == 0:
             datos = json.loads(proceso.stdout)
-            # Buscamos dinámicamente cualquier sensor que contenga la palabra Proximity
             for nombre_sensor in datos.keys():
                 if "Proximity" in nombre_sensor or "ps" in nombre_sensor:
                     valores = datos[nombre_sensor]['values']
-                    return float(valores[0])
+                    return float(valores)
     except Exception:
         pass
-    return 5.0  # Por defecto asumimos que está lejos (Lejos)
+    return 5.0
 
 def medir_ping():
     try:
@@ -55,45 +70,58 @@ def medir_velocidad():
     except Exception:
         return 0.0
 
-# === BUCLE PRINCIPAL DEL RADAR ===
+# === BUCLE PRINCIPAL CON CÓDIGOS DE COLOR ===
 try:
     while True:
         borrar_pantalla()
-        print("==========================================")
-        print(" 🛰️   RADAR ECO-SENSORIAL DE RED ACTIVO   🛰️")
-        print("==========================================")
+        print(f"{CYAN}=========================================={RESET}")
+        print(f"{CYAN} 🛰️   RADAR ECO-SENSORIAL DE RED ACTIVO   🛰️{RESET}")
+        print(f"{CYAN}=========================================={RESET}")
         
-        # Leemos el hardware antes de la prueba de red
         proximidad = leer_sensor_proximidad()
-        modo_mano = " 🚫 MANO DETECTADA (Escaneo Forzado) " if proximidad == 0.0 else " 🟢 Monitoreo Normal "
+        if proximidad == 0.0:
+            modo_mano = f"{ROJO} 🚫 MANO DETECTADA (Escaneo Forzado) {RESET}"
+        else:
+            modo_mano = f"{VERDE} 🟢 Monitoreo Normal {RESET}"
         print(f" [ Sensor:{modo_mano}]")
         
-        print(" [ Escaneando latencia... ]")
+        print(f" {BLANCO}[ Escaneando latencia... ]{RESET}")
         ping = medir_ping()
         
-        print(" [ Analizando Mbps... ]")
+        print(f" {BLANCO}[ Analizando Mbps... ]{RESET}")
         mbps = medir_velocidad()
         
         ahora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        barra_visual = generar_barra(mbps)
+        barra_visual = generar_barra_color(mbps)
         
+        # Evaluamos el estado general del internet para pintar las etiquetas
+        if mbps < 5.0:
+            alerta_estado = f"{ROJO}CRÍTICO{RESET}"
+            color_metrica = ROJO
+        elif mbps < 15.0:
+            alerta_estado = f"{AMARILLO}MODERADO{RESET}"
+            color_metrica = AMARILLO
+        else:
+            alerta_estado = f"{VERDE}EXCELENTE{RESET}"
+            color_metrica = VERDE
+
         borrar_pantalla()
-        print("==========================================")
-        print(" 📊   PANEL GRÁFICO DE INTERNET EN VIVO  📊")
-        print("==========================================")
-        print(f" 📅  Último escaneo: {ahora}")
-        print(f" ⚡  Latencia:      {ping if ping else 'Error'} ms")
-        print(f" 🚀  Descarga:      {mbps} Mbps")
+        print(f"{AZUL}=========================================={RESET}")
+        print(f"{AZUL} 📊   PANEL MULTICOLOR DE INTERNET VIVO  📊{RESET}")
+        print(f"{AZUL}=========================================={RESET}")
+        print(f" 📅  Último escaneo: {BLANCO}{ahora}{RESET}")
+        print(f" ⚡  Latencia:      {color_metrica}{ping if ping else 'Error'} ms{RESET}")
+        print(f" 🚀  Descarga:      {color_metrica}{mbps} Mbps{RESET} ({alerta_estado})")
         print(f" 📈  Rendimiento:   {barra_visual}")
-        print("==========================================")
+        print(f"{AZUL}=========================================={RESET}")
         
         if proximidad == 0.0:
-            print(" 🔥 ¡MODO TURBO ACTIVADO POR HARDWARE! 🔥")
-            print("==========================================")
+            print(f"{AMARILLO} 🔥 ¡MODO TURBO ACTIVADO POR HARDWARE! 🔥{RESET}")
+            print(f"{AZUL}=========================================={RESET}")
             os.system('termux-vibrate -d 100')
         
-        print(" 🛑 Presiona CTRL + C para salir")
-        print("==========================================")
+        print(f" {ROJO}🛑 Presiona CTRL + C para salir{RESET}")
+        print(f"{AZUL}=========================================={RESET}")
         
         with open("reporte_red.txt", "a") as f:
             f.write(f"[{ahora}] Ping: {ping} ms | Speed: {mbps} Mbps | Sensor: {proximidad}\n")
@@ -104,4 +132,4 @@ try:
             time.sleep(10)
 
 except KeyboardInterrupt:
-    print("\n\n🛑 Radar sensorial apagado. ¡Impecable trabajo, campeón!")
+    print(f"\n\n{VERDE}🛑 Radar sensorial apagado correctamente. ¡Impecable, campeón!{RESET}")

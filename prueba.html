@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Simplificado - Proyecto Libertad</title>
+</head>
+<body style="background-color: #111; color: #fff; font-family: sans-serif; padding: 20px; text-align: center;">
+
+    <h2>🚀 PANEL DE CONTROL - PROYECTO LIBERTAD</h2>
+    <p>Monitoreo del Fondo de Arraigo</p>
+
+    <!-- Algoritmo de Flujo -->
+    <div style="width: 80%; max-width: 500px; background: #222; border: 2px solid #333; border-radius: 12px; padding: 6px; margin: 20px auto;">
+        <div id="barraProgreso" style="width: 0%; height: 30px; background: linear-gradient(90deg, #00c6ff, #0072ff); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1); border-radius: 8px;"></div>
+    </div>
+    <h3 style="color: #00ffcc;">Acumulado: <span id="textoAcumulado">$0</span> / $1.200.000 COP</h3>
+    <button id="opt_android" style="padding: 14px 28px; background: #00ffcc; color: #111; border: none; font-weight: bold; font-size: 16px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,255,204,0.3); transition: transform 0.1s;">
+        ⚡ Contratar Ahora (opt_android)
+    </button>
+
+    <hr style="border: 1px solid #333; margin: 40px auto; width: 80%;">
+
+    <!-- ================= SECCIÓN BÓVEDA TITÁN ================= -->
+    <h2>🔒 BÓVEDA CRIPTOGRÁFICA TITÁN</h2>
+    <p>Acceso Restringido a Bitácoras de Evidencia</p>
+
+    <!-- Interfaz de Bloqueo -->
+    <div id="pantallaBloqueo" style="display: block; max-width: 400px; margin: 20px auto; background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px dashed #ff3366; box-shadow: 0 0 15px rgba(255,51,102,0.1);">
+        <p style="color: #ff3366; font-weight: bold;">⚠️ INGRESE CREDENCIAL DE ACCESO MAESTRO</p>
+        <input type="password" id="inputClave" placeholder="Clave de seguridad..." style="padding: 10px; width: 70%; border-radius: 6px; border: 1px solid #333; background: #222; color: #fff; text-align: center; margin-bottom: 15px;"><br>
+        <button id="btnVerificar" style="padding: 10px 20px; background: #ff3366; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Desbloquear Bóveda</button>
+        <p id="errorMensaje" style="color: #ff3366; font-size: 14px; margin-top: 10px; display: none;">❌ Clave incorrecta o denegada</p>
+    </div>
+
+    <!-- Contenido Protegido -->
+    <div id="contenidoBoveda" style="display: none; max-width: 500px; margin: 20px auto; background: #0d1b2a; padding: 25px; border-radius: 12px; border: 2px solid #00e5ff; text-align: left; box-shadow: 0 0 20px rgba(0,229,255,0.2);">
+        <h3 style="color: #00e5ff; text-align: center; margin-top: 0;">🔓 ACCESO AUTORIZADO - BITÁCORAS</h3>
+        <p style="color: #aaa; font-size: 14px;"><strong>ID de Sesión:</strong> <span style="color: #00ffcc;">TITAN-SECURE-2026-OK</span></p>
+        <div style="background: #14213d; padding: 15px; border-radius: 8px; border-left: 4px solid #00ffcc; font-family: monospace; font-size: 13px; line-height: 1.6;">
+            [06/Jun/2026 10:29 UTC-5]<br>
+            • Auditoría de red completada en subred local.<br>
+            • Caza_intrusos.py enlazado con sockets activos.<br>
+            • Scripts locales sincronizados con resguardo táctico.
+        </div>
+    </div>
+
+    <script>
+        // Lógica del Algoritmo de Flujo
+        let fondoAcumulado = 0;
+        const METAFINAL = 1200000;
+        const VALOR_SERVICIO = 150000;
+
+        const botonContratar = document.getElementById('opt_android');
+        const barra = document.getElementById('barraProgreso');
+        const textoFondo = document.getElementById('textoAcumulado');
+
+        function actualizarFlujoFinanciero() {
+            if (fondoAcumulado > METAFINAL) fondoAcumulado = METAFINAL;
+            let porcentaje = (fondoAcumulado / METAFINAL) * 100;
+            barra.style.width = porcentaje + '%';
+            textoFondo.innerText = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(fondoAcumulado);
+        }
+
+        botonContratar.addEventListener('click', () => {
+            if (fondoAcumulado < METAFINAL) {
+                fondoAcumulado += VALOR_SERVICIO;
+                actualizarFlujoFinanciero();
+            } else {
+                alert("¡Meta de Arraigo completada con éxito! 🏆");
+            }
+        });
+
+        // Lógica de Validación Directa (Compatible con entornos locales sin HTTPS)
+        const CLAVE_CORRECTA = "Titan2026";
+
+        const btnVerificar = document.getElementById('btnVerificar');
+        const inputClave = document.getElementById('inputClave');
+        const pantallaBloqueo = document.getElementById('pantallaBloqueo');
+        const contenidoBoveda = document.getElementById('contenidoBoveda');
+        const errorMensaje = document.getElementById('errorMensaje');
+
+        btnVerificar.addEventListener('click', () => {
+            const claveIngresada = inputClave.value;
+
+            if (claveIngresada === CLAVE_CORRECTA) {
+                errorMensaje.style.display = 'none';
+                pantallaBloqueo.style.display = 'none';
+                contenidoBoveda.style.display = 'block';
+            } else {
+                errorMensaje.style.display = 'block';
+                inputClave.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

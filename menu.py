@@ -12,7 +12,7 @@ RESET = "\033[0m"
 def obtener_almacenamiento():
     try:
         resultado = subprocess.check_output("df -h /data | tail -n 1", shell=True).decode().split()
-        return f"{resultado[2]} Usado / {resultado[3]} Disponible ({resultado[4]})"
+        return f"{resultado} Usado / {resultado} Disponible ({resultado})"
     except:
         return "No disponible"
 
@@ -22,7 +22,7 @@ def mostrar_menu():
         espacio = obtener_almacenamiento()
         
         print(f"{CYAN}======================================================={RESET}")
-        print(f"     🛸 CENTRAL TÁCTICA V1.1 - PROYECTO LIBERTAD 2026")
+        print(f"     🛸 CENTRAL TÁCTICA V1.2 - PROYECTO LIBERTAD 2026")
         print(f"{CYAN}======================================================={RESET}")
         print(f"📱 {VERDE}Dispositivo:{RESET} Infinix X6870 (Android 15)")
         print(f"💾 {VERDE}Almacenamiento:{RESET} {espacio}")
@@ -37,11 +37,12 @@ def mostrar_menu():
         print(f" [{VERDE}5{RESET}] 🚀 Inyector Automático a GitHub (`subir`)")
         print(f" [{VERDE}6{RESET}] 🎮 Campeonato Terminal (Adivina el Número)")
         print(f" [{VERDE}7{RESET}] ⏱️  Reloj Atómico Sincronizado UTC-5")
-        print(f" [{VERDE}8{RESET}] 📊 Generar Reporte Visual (`reporte.html`) 🌟")
+        print(f" [{VERDE}8{RESET}] 📊 Generar Reporte Visual (`reporte.html`)")
+        print(f" [{VERDE}9{RESET}] 🔒 Verificador de Integridad Criptográfica 🌟")
         print(f" [{ROJO}0{RESET}] ❌ Salir de la Central")
         print(f"{CYAN}-------------------------------------------------------{RESET}")
         
-        opcion = input(f"{CYAN}[👉 SELECCIÓN] Ingrese un número (0-8): {RESET}").strip()
+        opcion = input(f"{CYAN}[👉 SELECCIÓN] Ingrese un número (0-9): {RESET}").strip()
         
         if opcion == "1":
             subprocess.run(["python", os.path.expanduser("~/mis_script/puertos.py")])
@@ -65,6 +66,9 @@ def mostrar_menu():
             input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
         elif opcion == "8":
             subprocess.run(["python", os.path.expanduser("~/mis_script/reportador.py")])
+            input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
+        elif opcion == "9":
+            subprocess.run(["python", os.path.expanduser("~/mis_script/verificador.py")])
             input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
         elif opcion == "0":
             print(f"\n{ROJO}⚠️  Apagando Central Táctica. Conexión cerrada.{RESET}\n")

@@ -1,13 +1,21 @@
 ===========================================================
  📜  NOTA DE RESGUARDO TÁCTICO - PROYECTO LIBERTAD 2026
 ===========================================================
- 📅 Fecha de Cierre: Domingo, 07 de Jun de 2026 (12:28)
+ 📅 Última Actualización: Domingo, 07 de Junio de 2026
  📲 Dispositivo Central: Infinix X6870 (Android 15)
- 🌐 Repositorio Remoto: Sincronizado bajo el Sello [05415ef]
+ 🌐 Repositorio Remoto: Sincronizado bajo el Sello [0922037]
 ===========================================================
 
-🛠️ ARSENAL CENTRALIZADO Y AUDITADO (Central V1.3):
- * Opción 5  -> Sincronización automática a GitHub Pages.
- * Opción 10 -> Escudo de Sockets en tiempo real integrado.
- 🔐 Estado del Ecosistema: 100% OPERATIVO, LIMPIO e ÍNTEGRO.
+🛠️ ARSENAL CENTRALIZADO Y AUDITADO (Central Táctica V1.5):
+ * Opción 5  -> Monitor Guardián de Procesos y CPU (guardian.py)
+ * Opción 12 -> Sistema de Transacciones Financieras (finanzas.py)
+ 🔐 Estado del Ecosistema: 12 HERRAMIENTAS ÉLITE OPERATIVAS.
+
+💰 CONTROL DE DEPOSITOS Y CAJA REMOTA:
+ * Plataforma Recaudadora: Cuenta Nequi
+ * Número Vinculado: 3507916503
+ * Terminal Financiera: Huawei P9 Lite (Terminal de Caja)
+ * Libro de Contabilidad: 'historial_financiero.txt' Activo
+===========================================================
+ 🧠 ¡SISTEMAS AMPLIADOS Y RESPALDADOS DE FORMA IMPECABLE!
 ===========================================================

@@ -22,7 +22,7 @@ def mostrar_menu():
         espacio = obtener_almacenamiento()
         
         print(f"{CYAN}======================================================={RESET}")
-        print(f"     🛸 CENTRAL TÁCTICA V1.3 - PROYECTO LIBERTAD 2026")
+        print(f"     🛸 CENTRAL TÁCTICA V1.4 - PROYECTO LIBERTAD 2026")
         print(f"{CYAN}======================================================={RESET}")
         print(f"📱 {VERDE}Dispositivo:{RESET} Infinix X6870 (Android 15)")
         print(f"💾 {VERDE}Almacenamiento:{RESET} {espacio}")
@@ -39,11 +39,12 @@ def mostrar_menu():
         print(f" [{VERDE}7{RESET}] ⏱️  Reloj Atómico Sincronizado UTC-5")
         print(f" [{VERDE}8{RESET}] 📊 Generar Reporte Visual (`reporte.html`)")
         print(f" [{VERDE}9{RESET}] 🔒 Verificador de Integridad Criptográfica")
-        print(f" [{VERDE}10{RESET}] 🛡️  Escudo de Conexiones de Red Activo 🌟")
+        print(f" [{VERDE}10{RESET}] 🛡️  Escudo de Conexiones de Red Activo")
+        print(f" [{VERDE}11{RESET}] 🔑 Generador de Llaves Maestras Seguras 🌟")
         print(f" [{ROJO}0{RESET}] ❌ Salir de la Central")
         print(f"{CYAN}-------------------------------------------------------{RESET}")
         
-        opcion = input(f"{CYAN}[👉 SELECCIÓN] Ingrese un número (0-10): {RESET}").strip()
+        opcion = input(f"{CYAN}[👉 SELECCIÓN] Ingrese un número (0-11): {RESET}").strip()
         
         if opcion == "1":
             subprocess.run(["python", os.path.expanduser("~/mis_script/puertos.py")])
@@ -73,6 +74,9 @@ def mostrar_menu():
             input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
         elif opcion == "10":
             subprocess.run(["python", os.path.expanduser("~/mis_script/cortafuegos.py")])
+            input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
+        elif opcion == "11":
+            subprocess.run(["python", os.path.expanduser("~/mis_script/llave_maestra.py")])
             input(f"\n{AMARILLO}Presione Enter para volver al menú...{RESET}")
         elif opcion == "0":
             print(f"\n{ROJO}⚠️  Apagando Central Táctica. Conexión cerrada.{RESET}\n")
